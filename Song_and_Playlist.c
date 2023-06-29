@@ -29,7 +29,7 @@ SONG* getsong(char* songname)
 {
 	SONG* temp;
 	temp = (SONG*)malloc(sizeof(SONG));
-	strcpy(temp->song_name, songname);
+	strcpy_s(temp->song_name, 100, songname);
 	temp->next_song = NULL;
 	temp->prev_song = NULL;
 	return temp;
@@ -38,7 +38,7 @@ PLAYLIST* getplaylist(char* playlistname)
 {
 	PLAYLIST* temp;
 	temp = (PLAYLIST*)malloc(sizeof(PLAYLIST));
-	strcpy(temp->playlist_name, playlistname);
+	strcpy_s(temp->playlist_name, 100, playlistname);
 	temp->next_playlist = NULL;
 	temp->first_song = NULL;
 	temp->cur_song = NULL;
@@ -124,12 +124,6 @@ void insert_song(HCT_P* P, char* songname, char* targetPlaylist)
 	}
 	else
 	{
-		// while (cur->next_song != NULL)
-		// {
-		// 	cur = cur->next_song;
-		// }
-		// cur->next_song = newsong;
-		// newsong->prev_song = cur;
 		playlist->last_song->next_song = newsong;
 		playlist->last_song = newsong;
 	}
@@ -144,13 +138,6 @@ void insert_playlist(HCT_P* P, char* playlistname)
 	}
 	else
 	{
-		// while (cur->next_playlist != NULL)
-		// {
-		// 	cur = cur->next_playlist;
-		// }
-		// cur->next_playlist = newplaylist;
-
-		//newplaylist->prev_playlist = cur;
 		P->tail->next_playlist = newplaylist;
 		P->tail = newplaylist;
 	}
@@ -220,9 +207,10 @@ void delete_all_songs(HCT_P* P, char* targetPlaylist)
 	{
 		return;
 	}
-	SONG* cur = playlist->first_song;
+	SONG* cur;
 	while (playlist->first_song != NULL)
 	{
+		cur = playlist->first_song;
 		playlist->first_song = playlist->first_song->next_song;
 		if (playlist->first_song != NULL)
 		{
@@ -275,9 +263,10 @@ void delete_all_playlists(HCT_P* P)
 	{
 		return;
 	}
-	PLAYLIST* cur = P->head;
+	PLAYLIST* cur;
 	while (P->head != NULL)
 	{
+		cur = P->head;
 		delete_all_songs(P, cur->playlist_name);
 		P->head = P->head->next_playlist;
 		free(cur);
